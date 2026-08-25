@@ -1,0 +1,29 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProCard from '../../components/ProCard.astro';
+import { getCollection } from 'astro:content';
+
+const allPros = await getCollection('pros');
+
+const pros = allPros.sort((a, b) => {
+  if (a.data.featured && !b.data.featured) return -1;
+  if (!a.data.featured && b.data.featured) return 1;
+  return a.data.name.localeCompare(b.data.name);
+});
+---
+
+<Layout title="All pros — Cherokee Home Pros">
+  <section class="mb-8">
+    <h1 class="text-3xl font-bold text-slate-900">All contractors</h1>
+    <p class="mt-2 text-slate-600">
+      {pros.length} local pros. Filter by service or city from the home page, or{' '}
+      <a href="/get-quote" class="text-sky-700 underline">request quotes</a>.
+    </p>
+  </section>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    {pros.map((pro) => (
+      <ProCard pro={pro} />
+    ))}
+  </div>
+</Layout>

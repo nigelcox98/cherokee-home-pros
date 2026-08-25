@@ -1,0 +1,164 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { formsparkAction } from '../data/site';
+
+const service = Astro.url.searchParams.get('service') ?? '';
+const city = Astro.url.searchParams.get('city') ?? '';
+const pro = Astro.url.searchParams.get('pro') ?? '';
+---
+
+<Layout title="Get a quote — Cherokee Home Pros">
+  <section class="mx-auto max-w-xl">
+    <h1 class="text-3xl font-bold text-slate-900">Request free quotes</h1>
+    <p class="mt-3 text-slate-600">
+      Tell us the service and city. We forward your request to a few matching local pros.
+      They contact you directly — no obligation.
+    </p>
+
+    <form id="quote-form" class="mt-8 space-y-5" method="POST" action={formsparkAction}>
+      <input type="hidden" name="_email.subject" value="New quote request — Cherokee Home Pros" />
+      <input
+        type="hidden"
+        name="_redirect"
+        id="form-redirect"
+        value="https://cherokee-home-pros.pages.dev/thanks"
+      />
+      <input
+        type="checkbox"
+        name="_gotcha"
+        tabindex="-1"
+        autocomplete="off"
+        aria-hidden="true"
+        class="hidden"
+      />
+      <div>
+        <label for="service" class="block text-sm font-medium text-slate-700">Service needed</label>
+        <select
+          id="service"
+          name="service"
+          required
+          class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+        >
+          <option value="">Select…</option>
+          <option value="septic" selected={service === 'septic'}>Septic pumping / repair</option>
+          <option value="plumbing" selected={service === 'plumbing'}>Plumbing</option>
+          <option value="pool" selected={service === 'pool'}>Pool service</option>
+          <option value="roofing" selected={service === 'roofing'}>Roofing</option>
+          <option value="hvac" selected={service === 'hvac'}>HVAC</option>
+          <option value="electrical" selected={service === 'electrical'}>Electrical</option>
+          <option value="ev-charger" selected={service === 'ev-charger'}>EV charger install</option>
+          <option value="tesla-body" selected={service === 'tesla-body'}>Tesla body / collision</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="city" class="block text-sm font-medium text-slate-700">City / area</label>
+        <select
+          id="city"
+          name="city"
+          required
+          class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+        >
+          <option value="">Select…</option>
+          <option value="canton" selected={city === 'canton'}>Canton</option>
+          <option value="woodstock" selected={city === 'woodstock'}>Woodstock</option>
+          <option value="holly-springs" selected={city === 'holly-springs'}>Holly Springs</option>
+          <option value="ball-ground" selected={city === 'ball-ground'}>Ball Ground</option>
+          <option value="acworth" selected={city === 'acworth'}>Acworth</option>
+          <option value="kennesaw" selected={city === 'kennesaw'}>Kennesaw</option>
+          <option value="marietta" selected={city === 'marietta'}>Marietta</option>
+          <option value="other">Other / nearby</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="name" class="block text-sm font-medium text-slate-700">Your name</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          required
+          class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+        />
+      </div>
+
+      <div>
+        <label for="phone" class="block text-sm font-medium text-slate-700">Phone</label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          required
+          class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+        />
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-medium text-slate-700">Email (optional)</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+        />
+      </div>
+
+      <div>
+        <label for="details" class="block text-sm font-medium text-slate-700">Details</label>
+        <textarea
+          id="details"
+          name="details"
+          rows="4"
+          placeholder="Tank size if known, green pool, roof leak location, etc."
+          class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+        ></textarea>
+      </div>
+
+      {pro && <input type="hidden" name="requested_pro" value={pro} />}
+
+      <button
+        type="submit"
+        class="w-full rounded-lg bg-sky-600 px-5 py-3 font-medium text-white hover:bg-sky-500"
+      >
+        Submit request
+      </button>
+
+      <p class="text-center text-xs text-slate-500">
+        Matching pros contact you directly. No charge to homeowners for the request.
+      </p>
+    </form>
+  </section>
+</Layout>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const service = params.get('service');
+  const city = params.get('city');
+  const pro = params.get('pro');
+  const serviceEl = document.getElementById('service');
+  const cityEl = document.getElementById('city');
+  const form = document.getElementById('quote-form');
+  const redirect = document.getElementById('form-redirect');
+  if (redirect instanceof HTMLInputElement) {
+    redirect.value = `${window.location.origin}/thanks`;
+  }
+  if (service && serviceEl instanceof HTMLSelectElement) serviceEl.value = service;
+  if (city && cityEl instanceof HTMLSelectElement) cityEl.value = city;
+  if (pro && form instanceof HTMLFormElement && !form.querySelector('[name="requested_pro"]')) {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'requested_pro';
+    input.value = pro;
+    form.appendChild(input);
+  }
+  if (form instanceof HTMLFormElement) {
+    form.addEventListener('submit', () => {
+      const button = form.querySelector('button[type="submit"]');
+      if (button instanceof HTMLButtonElement) {
+        button.disabled = true;
+        button.textContent = 'Sending…';
+      }
+    });
+  }
+</script>

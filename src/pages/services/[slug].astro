@@ -1,0 +1,55 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProCard from '../../components/ProCard.astro';
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import { services, serviceMeta } from '../../data/services';
+
+export const getStaticPaths = (async () => {
+  return services.map((service) => ({
+    params: { slug: service.slug },
+  }));
+}) satisfies GetStaticPaths;
+
+const { slug } = Astro.params;
+const meta = serviceMeta[slug!] ?? { title: slug, blurb: '' };
+
+const allPros = await getCollection('pros');
+const matching = allPros
+  .filter((p) => p.data.categories.includes(slug as any))
+  .sort((a, b) => {
+    if (a.data.featured && !b.data.featured) return -1;
+    if (!a.data.featured && b.data.featured) return 1;
+    return a.data.name.localeCompare(b.data.name);
+  });
+---
+
+<Layout title={`${meta.title} — Cherokee Home Pros`}>
+  <section class="mb-8">
+    <h1 class="text-3xl font-bold text-slate-900">{meta.title}</h1>
+    <p class="mt-3 max-w-2xl text-slate-600">{meta.blurb}</p>
+    <div class="mt-5">
+      <a
+        href={`/get-quote?service=${slug}`}
+        class="inline-flex items-center rounded-lg bg-sky-600 px-5 py-2.5 font-medium text-white hover:bg-sky-500"
+      >
+        Get quotes for this service →
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="mb-4 text-lg font-semibold text-slate-900">
+      {matching.length} pro{matching.length === 1 ? '' : 's'} listed
+    </h2>
+    {matching.length === 0 ? (
+      <p class="text-slate-600">No listings yet for this service. Check back soon or request a quote anyway.</p>
+    ) : (
+      <div class="grid gap-4 sm:grid-cols-2">
+        {matching.map((pro) => (
+          <ProCard pro={pro} />
+        ))}
+      </div>
+    )}
+  </section>
+</Layout>
