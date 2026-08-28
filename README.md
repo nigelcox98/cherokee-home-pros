@@ -53,17 +53,15 @@ The product is the quote form, not ads.
 
 ## Deploy
 
-Cloudflare Pages project `cherokee-home-pros`.
+Cloudflare Pages project `cherokee-home-pros` at [cherokee-home-pros.pages.dev](https://cherokee-home-pros.pages.dev/).
+
+Pushes to `main` deploy via GitHub Actions (`.github/workflows/deploy-pages.yml`).
+
+Manual deploy from a laptop:
 
 ```bash
 npm run deploy
 ```
-
-Dashboard / Git settings if you connect this repo:
-
-- Build command: `npm run build`
-- Output: `dist`
-- Framework: Astro
 
 ## Next after first deploy
 
