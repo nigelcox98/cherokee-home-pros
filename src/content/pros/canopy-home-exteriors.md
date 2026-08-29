@@ -1,5 +1,7 @@
 ---
 name: Canopy Home Exteriors
+url: https://canopyhomeexteriors.com
+phone: "(770) 758-6090"
 city: Marietta
 cities:
   - Marietta

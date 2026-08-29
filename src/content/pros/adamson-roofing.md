@@ -1,5 +1,7 @@
 ---
 name: Adamson Roofing Company
+url: https://www.adamsonroofingcompany.com
+phone: "(678) 680-6588"
 city: Marietta
 cities:
   - Marietta
